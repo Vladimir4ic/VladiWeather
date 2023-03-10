@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Погода</title>
+	<link rel="shortcut icon" type="image/png" href="https://i.imgur.com/mgfA8zD.png">
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0px 0 0;
+			background-image: url('https://i.imgur.com/IOMz1c0.png');
+			background-size: cover;
+			background-position: center center;
+			background-repeat: no-repeat;
+		}
+		.weather-container {
+			background-color: #fff;
+			margin: 50px auto;
+			padding: 20px;
+			border-radius: 10px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+			max-width: 600px;
+		}
+
+		.weather-container h1 {
+			text-align: center;
+			margin-bottom: 20px;
+		}
+
+		.weather-info {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		.weather-icon img {
+			max-width: 100px;
+		}
+
+		.weather-details {
+			margin-left: 50px;
+		}
+
+		.weather-details p {
+			margin: 5px 0;
+			font-size: 18px;
+		}
+
+		.input-container {
+			display: flex;
+			margin-bottom: 20px;
+		}
+
+		.input-container input[type="text"] {
+			padding: 10px;
+			font-size: 16px;
+			border-radius: 5px;
+			border: none;
+			flex-grow: 1;
+		}
+
+		.input-container input[type="submit"] {
+			padding: 10px;
+			background-color: #4CAF50;
+			color: white;
+			border: none;
+			font-size: 16px;
+			border-radius: 5px;
+			margin-left: 10px;
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+	<div class="weather-container">
+		<h1>Погода вчера</h1>
+
+		<form id="weather-form">
+			<div class="input-container">
+				<input type="text" id="city-input" placeholder="Введите город...">
+				<input type="submit" value="Показать погоду">
+			</div>
+		</form>
+
+		<div class="weather-info">
+			<div class="weather-icon">
+				<img src="" alt="погода">
+			</div>
+			<div class="weather-details">
+				<p id="location">Местоположение:</p>
+				<p id="temperature">Температура:</p>
+				<p id="humidity">Влажность:</p>
+				<p id="wind-speed">Ветер:</p>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		const form = document.getElementById('weather-form');
+		const cityInput = document.getElementById('city-input');
+		const locationElem = document.getElementById('location');
+		const temperatureElem = document.getElementById('temperature');
+		const humidityElem = document.getElementById('humidity');
+		const windSpeedElem = document.getElementById('wind-speed');
+		const weatherIconElem = document.querySelector('.weather-icon img');
+		const apiKey = '5e13848b34d2641346b939408e3547a2';
+		const redirectUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+
+		form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const city = cityInput.value;
+  if (city === '') {
+    alert('Введите город');
+    return;
+  }
+
+  if (city.toLowerCase() === 'rainwon') {
+    window.location.href = redirectUrl;
+    return;
+  }
+
+  fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=ru`)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      locationElem.innerText = `Местоположение: ${data.name}, ${data.sys.country}`;
+      temperatureElem.innerText = `Температура: ${data.main.temp} °C`;
+      humidityElem.innerText = `Влажность: ${data.main.humidity}%`;
+      windSpeedElem.innerText = `Ветер: ${data.wind.speed} м/с`;
+      weatherIconElem.src = `https://openweathermap.org/img/w/${data.weather[0].icon}.png`;
+    })
+    .catch(error => {
+      console.log(error);
+      alert('Не удалось получить данные о погоде');
+    });
+});
+
+
+	</script>
+</body>
+</html>
+
